@@ -1,0 +1,15 @@
+{
+ "name": "sirion1987/phpreadconfig",
+ "description": "Configuration reader ...",
+ "authors": [
+  {
+   "name": "Domenico Garofoli",
+   "email": "sirion1987@gmail.com"
+  }
+ ],
+ "autoload": {
+  "psr-4": {
+   "Sirion1987\\": "src"
+  }
+ }
+}
