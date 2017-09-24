@@ -2,23 +2,13 @@
 
 namespace Sirion1987;
 
-class PhpReadConfig
-{
- public $configFile;
+class PhpReadConfig extends PhpReadConfigAbstract{
 
- public function __construct($file)
- {
-  $config_file = $this->checkValidFile($file);
- }
-
- private function checkValidFile($file)
- {
-  if (!file_exists($file)){
-   throw new \Exception(
-    "{$file}: File not found"
-   );   
+ public function __construct($configInput){
+  if (($type = parent::getValidConfigType($configInput)) !== NULL ){
+   parent::__construct($type);
   }else{
-   return $file;
+   throw new \Exception('Unsupported type');
   }
  }
 
