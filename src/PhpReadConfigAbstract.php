@@ -4,31 +4,28 @@ namespace Sirion1987;
 
 use Sirion1987\ConfigType;
 
-abstract class PhpReadConfigAbstract{
-
- const VALID_CONFIG_TYPE = [
-  'directory' => 'Sirion1987\ConfigType\Directory',
-  'file'      => 'Sirion1987\ConfigType\File',
-  'array'     => 'Sirion1987\ConfigType\Array',
-  'externalContent' => 'Sirion1987\ConfigType\ExternalContent'
- ];
+abstract class PhpReadConfigAbstract {
 
  private $configType = NULL;
- private $configTypeClass = NULL;
+ private $configTypeClass = array();
 
- public function __construct($configInputType){
+ public function __construct($configInputType,$configInput){
   if (class_exists($configInputType)){
-   $this->configTypeClass = new $configInputType;
+   $this->configTypeClass = new $configInputType($configInput);
   }else{
    throw new \Exception('Error: Class not found.');
   }
  }
  
- public function getValidConfigType($configInput){
-  if (array_key_exists($configInput, self::VALID_CONFIG_TYPE)){
-   return self::VALID_CONFIG_TYPE["{$configInput}"]; 
-  }else{
-   return NULL;
+ public function getValidConfigTypeClass($configInput){
+  if (is_dir($configInput)){
+   return "Sirion1987\ConfigType\Directory";
+  }elseif (is_file($configInput)){
+   return "Sirion1987\ConfigType\File";
+  }
+
+  if (!file_exists($configInput)){
+   throw new \Exception("#{$configInput} not found ...");
   }
  }
 
