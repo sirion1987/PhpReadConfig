@@ -4,16 +4,24 @@ namespace Sirion1987\ConfigType;
 
 class File implements ConfigTypeInterface{
 
- public $dirname;
- public $basename;
- public $extension;
- public $filename;
- public $path;
+ public  $dirname;
+ public  $basename;
+ public  $extension;
+ public  $filename;
+ public  $path;
+
+ private $parserClass;
+ private $parser;
 
  const ACCEPTED_FILETYPES = [
   'txt',
   'php',
   'yml'
+ ];
+
+ const ACCEPTED_FILETYPES_CLASS = [
+  'php' => 'Sirion1987\FileParser\Php',
+  'yml' => 'Sirion1987\FileParser\Yml'
  ];
 
  public function __construct($file){
@@ -24,6 +32,13 @@ class File implements ConfigTypeInterface{
    $this->extension = $file_info["extension"];
    $this->filename = $file_info["filename"];
    $this->path = $file;
+   $this->parserClass = $this->getParserClass($this->extension);
+
+   if (class_exists($this->parserClass)){
+    $this->parser = new $this->parserClass;
+   }else{
+    throw new \Exception("Parser {$file_info["extension"]} not find ...");
+   }
   }else{
    throw new \Exception("#{$file_info["extension"]} not accepted ...");
   }
@@ -42,6 +57,10 @@ class File implements ConfigTypeInterface{
 
  public function load(){
   return "File";
+ }
+
+ private function getParserClass($extension){
+  return self::ACCEPTED_FILETYPES_CLASS[$this->extension];
  }
  
 }
